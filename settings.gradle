@@ -1,0 +1,3 @@
+include ':WasuDlna'
+include ':app'
+rootProject.name = "DlnaDemo"
