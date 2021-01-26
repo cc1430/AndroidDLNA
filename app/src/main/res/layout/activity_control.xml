@@ -10,20 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="5dp">
-
-        <TextView
-            android:id="@+id/tv_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="总时长：" />
-
-        <TextView
-            android:id="@+id/tv_duration_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp" />
+        android:layout_marginTop="30dp">
 
         <TextView
             android:id="@+id/tv_pos"
@@ -37,13 +24,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp" />
+
+        <TextView
+            android:id="@+id/tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:text="总时长：" />
+
+        <TextView
+            android:id="@+id/tv_duration_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp" />
     </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/sb_progress"
+        android:layout_below="@id/layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
     <LinearLayout
         android:id="@+id/layout_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_1"
+        android:layout_below="@id/sb_progress"
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
@@ -63,7 +71,6 @@
             android:layout_weight="1"
             android:text="forward" />
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/layout_3"
@@ -95,6 +102,65 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="exit" />
+            android:text="stop" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/layout_3"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:id="@+id/tv_cur_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="音量：" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/sb_volume"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@id/layout_4"
+        android:layout_marginTop="5dp" />
+
+    <LinearLayout
+        android:id="@+id/layout_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/sb_volume">
+
+        <Button
+            android:id="@+id/btn_volume_minus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="volume-" />
+
+        <Button
+            android:id="@+id/btn_volume_plus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="volume+" />
+
+        <Button
+            android:id="@+id/btn_mute"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:text="mute"/>
+
     </LinearLayout>
 </RelativeLayout>

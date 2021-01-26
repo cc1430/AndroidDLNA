@@ -78,4 +78,5 @@ public interface IWasuDlnaController {
      * @param desiredMute 是否静音
      */
     void setMute(boolean desiredMute, SetMuteListener listener);
+
 }

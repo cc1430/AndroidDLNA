@@ -48,7 +48,9 @@ import org.fourthline.cling.support.renderingcontrol.callback.SetVolume;
 public class WasuDlnaController implements IWasuDlnaController {
 
     private final ControlPoint controlPoint;
-    private Service service;
+    private Service avTransportService;
+    private Service renderingControlService;
+    private Device device;
 
     public WasuDlnaController(ControlPoint controlPoint) {
         this.controlPoint = controlPoint;
@@ -56,20 +58,25 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void selectDevice(Device device) {
-        UDAServiceId udaServiceId = new UDAServiceId(Constant.AV_TRANSPORT);
-        service = device.findService(udaServiceId);
+        this.device = device;
+        UDAServiceId udaServiceId = new UDAServiceId(Constant.SERVICE_ID_AV_TRANSPORT);
+        avTransportService = device.findService(udaServiceId);
 
-        if (Utils.isNull(service)) {
-            Log.d(Constant.TAG, "selectDevice: service == null");
-            return;
+        udaServiceId = new UDAServiceId(Constant.SERVICE_ID_RENDERING_CONTROL);
+        renderingControlService = device.findService(udaServiceId);
+
+        if (Utils.isNull(avTransportService)) {
+            Log.d(Constant.TAG, "selectDevice: avTransportService == null");
         }
 
-        DlnaUtil.printSupportedActions(service);
+        if (Utils.isNull(renderingControlService)) {
+            Log.d(Constant.TAG, "selectDevice: renderingControlService == null");
+        }
     }
 
     @Override
     public void setPlayItem(String url, String name, SetPlayUrlListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(avTransportService)) {
             Log.d(Constant.TAG, "setPlayItem: service == null");
             return;
         }
@@ -79,12 +86,12 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_SET_AV_TRANSPORT_URI)) {
+        if (!DlnaUtil.isSupportAction(avTransportService, Constant.ACTION_SET_AV_TRANSPORT_URI)) {
             return;
         }
 
         String metaData = DlnaUtil.pushMediaToRender(url, "id", name, "0", Constant.VIDEO_TYPE);
-        SetAVTransportURI setAVTransportURI = new SetAVTransportURI(service, url, metaData) {
+        SetAVTransportURI setAVTransportURI = new SetAVTransportURI(avTransportService, url, metaData) {
             @Override
             public void success(ActionInvocation invocation) {
                 Log.d(Constant.TAG, "SetAVTransportURI success: ");
@@ -106,7 +113,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void play(PlayListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(avTransportService)) {
             Log.d(Constant.TAG, "play: service == null");
             return;
         }
@@ -116,11 +123,11 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_PLAY)) {
+        if (!DlnaUtil.isSupportAction(avTransportService, Constant.ACTION_PLAY)) {
             return;
         }
 
-        controlPoint.execute(new Play(service) {
+        controlPoint.execute(new Play(avTransportService) {
             @Override
             public void success(ActionInvocation invocation) {
                 Log.d(Constant.TAG, "play success: ");
@@ -141,7 +148,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void pause(PauseListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(avTransportService)) {
             Log.d(Constant.TAG, "pause: service == null");
             return;
         }
@@ -151,11 +158,11 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_PAUSE)) {
+        if (!DlnaUtil.isSupportAction(avTransportService, Constant.ACTION_PAUSE)) {
             return;
         }
 
-        controlPoint.execute(new Pause(service) {
+        controlPoint.execute(new Pause(avTransportService) {
             @Override
             public void success(ActionInvocation invocation) {
                 Log.d(Constant.TAG, "pause success: ");
@@ -176,7 +183,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void seek(int position, SeekListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(avTransportService)) {
             Log.d(Constant.TAG, "seek: service == null");
             return;
         }
@@ -186,12 +193,12 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_SEEK)) {
+        if (!DlnaUtil.isSupportAction(avTransportService, Constant.ACTION_SEEK)) {
             return;
         }
 
         String time = Utils.getStringTime(position);
-        controlPoint.execute(new Seek(service, time) {
+        controlPoint.execute(new Seek(avTransportService, time) {
 
             @Override
             public void success(ActionInvocation invocation) {
@@ -213,7 +220,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void stop(StopListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(avTransportService)) {
             Log.d(Constant.TAG, "stop: service == null");
             return;
         }
@@ -223,11 +230,11 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_STOP)) {
+        if (!DlnaUtil.isSupportAction(avTransportService, Constant.ACTION_STOP)) {
             return;
         }
 
-        controlPoint.execute(new Stop(service) {
+        controlPoint.execute(new Stop(avTransportService) {
             @Override
             public void success(ActionInvocation invocation) {
                 Log.d(Constant.TAG, "Stop success: ");
@@ -248,7 +255,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void getPlayPosition(GetPlayPositionListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(avTransportService)) {
             Log.d(Constant.TAG, "getPlayPosition: service == null");
             return;
         }
@@ -258,15 +265,15 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_GET_POSITION_INFO)) {
+        if (!DlnaUtil.isSupportAction(avTransportService, Constant.ACTION_GET_POSITION_INFO)) {
             return;
         }
 
-        controlPoint.execute(new GetPositionInfo(service) {
+        controlPoint.execute(new GetPositionInfo(avTransportService) {
             @Override
             public void success(ActionInvocation invocation) {
-                PlayPositionResponse response = new PlayPositionResponse(invocation);
-                Log.d(Constant.TAG, "GetPositionInfo success: duration = " + response.getTrackDuration() + ", relTime = " + response.getRelTime());
+                super.success(invocation);
+                Log.d(Constant.TAG, "GetPositionInfo success: ");
                 if (Utils.isNotNull(listener)) {
                     listener.onGetPlayPositionSuccess(new PlayPositionResponse(invocation));
                 }
@@ -274,8 +281,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
             @Override
             public void received(ActionInvocation invocation, PositionInfo positionInfo) {
-                Log.d(Constant.TAG, "GetPositionInfo received: AbsTime" + positionInfo.getAbsTime());
-                Log.d(Constant.TAG, "GetPositionInfo received: RelTime" + positionInfo.getRelTime());
+                Log.d(Constant.TAG, "GetPositionInfo received: ");
                 if (Utils.isNotNull(listener)) {
                     listener.onReceivedPlayPosition(new PlayPositionResponse(invocation, positionInfo));
                 }
@@ -293,7 +299,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void setVolume(int volume, SetVolumeListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(renderingControlService)) {
             Log.d(Constant.TAG, "setVolume: service == null");
             return;
         }
@@ -303,11 +309,11 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_SET_VOLUME)) {
+        if (!DlnaUtil.isSupportAction(renderingControlService, Constant.ACTION_SET_VOLUME)) {
             return;
         }
 
-        controlPoint.execute(new SetVolume(service, volume) {
+        controlPoint.execute(new SetVolume(renderingControlService, volume) {
             @Override
             public void success(ActionInvocation invocation) {
                 Log.d(Constant.TAG, "SetVolume success: ");
@@ -328,7 +334,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void getVolume(GetVolumeListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(renderingControlService)) {
             Log.d(Constant.TAG, "getVolume: service == null");
             return;
         }
@@ -338,14 +344,16 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_GET_VOLUME)) {
+        if (!DlnaUtil.isSupportAction(renderingControlService, Constant.ACTION_GET_VOLUME)) {
             return;
         }
 
-        controlPoint.execute(new GetVolume(service) {
+        controlPoint.execute(new GetVolume(renderingControlService) {
             @Override
             public void success(ActionInvocation invocation) {
+                super.success(invocation);
                 Log.d(Constant.TAG, "GetVolume success: ");
+
                 if (Utils.isNotNull(listener)) {
                     listener.onGetVolumeSuccess(new VolumeResponse(invocation));
                 }
@@ -371,7 +379,7 @@ public class WasuDlnaController implements IWasuDlnaController {
 
     @Override
     public void setMute(boolean desiredMute, SetMuteListener listener) {
-        if (Utils.isNull(service)) {
+        if (Utils.isNull(renderingControlService)) {
             Log.d(Constant.TAG, "setMute: service == null");
             return;
         }
@@ -381,11 +389,11 @@ public class WasuDlnaController implements IWasuDlnaController {
             return;
         }
 
-        if (!DlnaUtil.isSupportAction(service, Constant.ACTION_SET_MUTE)) {
+        if (!DlnaUtil.isSupportAction(renderingControlService, Constant.ACTION_SET_MUTE)) {
             return;
         }
 
-        controlPoint.execute(new SetMute(service, desiredMute) {
+        controlPoint.execute(new SetMute(renderingControlService, desiredMute) {
             @Override
             public void success(ActionInvocation invocation) {
                 Log.d(Constant.TAG, "SetMute success: ");

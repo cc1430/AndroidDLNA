@@ -18,8 +18,6 @@ import java.util.Date;
 
 public class DlnaUtil {
 
-    private static final String MEDIA_RENDER = "urn:schemas-upnp-org:device:MediaRenderer:1";
-
     /**
      * Check if the device is a media render device
      *
@@ -28,7 +26,7 @@ public class DlnaUtil {
      */
     public static boolean isMediaRenderDevice(Device device) {
         if (device != null
-                && MEDIA_RENDER.equalsIgnoreCase(device.getType().toString())) {
+                && Constant.DEVICE_MEDIA_RENDER.equalsIgnoreCase(device.getType().toString())) {
             return true;
         }
 
@@ -135,19 +133,4 @@ public class DlnaUtil {
         return res;
     }
 
-    public static void printSupportedActions(Service service) {
-        try {
-            String deviceName = service.getDevice().getDetails().getFriendlyName();
-            Action[] actions = service.getActions();
-            StringBuffer sb = new StringBuffer();
-            for (Action action : actions) {
-                sb.append(action.getName());
-                sb.append(", ");
-            }
-            Log.d(Constant.TAG, "DeviceName: " + deviceName + ", printSupportedAction: " + sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 }

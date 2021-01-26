@@ -13,7 +13,10 @@ public class Constant {
             "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" " + "xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\" " +
             "xmlns:dlna=\"urn:schemas-dlna-org:metadata-1-0/\">";
 
-    public static final String AV_TRANSPORT = "AVTransport";
+    public static final String DEVICE_MEDIA_RENDER = "urn:schemas-upnp-org:device:MediaRenderer:1";
+
+    public static final String SERVICE_ID_AV_TRANSPORT = "AVTransport";
+    public static final String SERVICE_ID_RENDERING_CONTROL = "RenderingControl";
 
     public static final String ACTION_SET_AV_TRANSPORT_URI = "SetAVTransportURI";
     public static final String ACTION_PLAY = "Play";
