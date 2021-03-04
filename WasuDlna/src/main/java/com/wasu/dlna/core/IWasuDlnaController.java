@@ -2,6 +2,7 @@ package com.wasu.dlna.core;
 
 
 import com.wasu.dlna.listener.GetPlayPositionListener;
+import com.wasu.dlna.listener.GetTransportInfoListener;
 import com.wasu.dlna.listener.GetVolumeListener;
 import com.wasu.dlna.listener.PauseListener;
 import com.wasu.dlna.listener.PlayListener;
@@ -78,5 +79,11 @@ public interface IWasuDlnaController {
      * @param desiredMute 是否静音
      */
     void setMute(boolean desiredMute, SetMuteListener listener);
+
+
+    /**
+     * 获取播放状态
+     */
+    void getTransportInfo(GetTransportInfoListener listener);
 
 }

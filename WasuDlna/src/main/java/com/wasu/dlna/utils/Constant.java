@@ -27,7 +27,6 @@ public class Constant {
     public static final String ACTION_SET_VOLUME = "SetVolume";
     public static final String ACTION_GET_VOLUME = "GetVolume";
     public static final String ACTION_SET_MUTE = "SetMute";
+    public static final String ACTION_GET_TRANSPORT_INFO = "GetTransportInfo";
 
-    public static final String ARG_TRACK_DURATION = "TrackDuration";
-    public static final String ARG_REL_TIME = "RelTime";
 }

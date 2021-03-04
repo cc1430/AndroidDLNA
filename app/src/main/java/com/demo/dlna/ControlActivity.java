@@ -56,9 +56,8 @@ public class ControlActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.btn_stop).setOnClickListener(this);
         findViewById(R.id.btn_back).setOnClickListener(this);
         findViewById(R.id.btn_forward).setOnClickListener(this);
-        findViewById(R.id.btn_volume_minus).setOnClickListener(this);
         findViewById(R.id.btn_mute).setOnClickListener(this);
-//        findViewById(R.id.btn_volume_minus).setOnClickListener(this);
+        findViewById(R.id.btn_volume_minus).setOnClickListener(this);
 //        findViewById(R.id.btn_volume_plus).setOnClickListener(this);
 
         tvDuration = findViewById(R.id.tv_duration_value);
@@ -121,11 +120,11 @@ public class ControlActivity extends AppCompatActivity implements View.OnClickLi
             String curPos = (String) tvPosition.getText();
             int pos = Utils.getIntTime(curPos) + 5000;
             WasuDlnaManager.getInstance().getWasuDlnaController().seek(pos, null);
-        } else if (id == R.id.btn_volume_minus) {
-            WasuDlnaManager.getInstance().getWasuDlnaController().getVolume(null);
         } else if (id == R.id.btn_mute) {
             WasuDlnaManager.getInstance().getWasuDlnaController().setMute(!isMute, null);
             isMute = !isMute;
+        } else if (id == R.id.btn_volume_minus) {
+            WasuDlnaManager.getInstance().getWasuDlnaController().getTransportInfo(null);
         }
     }
 
@@ -138,9 +137,9 @@ public class ControlActivity extends AppCompatActivity implements View.OnClickLi
                 tvDuration.setText(positionInfo.getTrackDuration());
                 tvPosition.setText(positionInfo.getRelTime());
 
-                int max = Utils.getIntTime(response.getTrackDuration());
+                int max = Utils.getIntTime(positionInfo.getTrackDuration());
                 seekBarProgress.setMax(max);
-                int current = Utils.getIntTime(response.getRelTime());
+                int current = Utils.getIntTime(positionInfo.getRelTime());
                 seekBarProgress.setProgress(current);
                 break;
             case MSG_UPDATE_VOLUME:

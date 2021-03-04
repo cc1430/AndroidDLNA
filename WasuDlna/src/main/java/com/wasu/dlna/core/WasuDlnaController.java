@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.wasu.dlna.bean.DlnaResponse;
 import com.wasu.dlna.bean.PlayPositionResponse;
+import com.wasu.dlna.bean.TransportInfoResponse;
 import com.wasu.dlna.bean.VolumeResponse;
 import com.wasu.dlna.listener.GetPlayPositionListener;
+import com.wasu.dlna.listener.GetTransportInfoListener;
 import com.wasu.dlna.listener.GetVolumeListener;
 import com.wasu.dlna.listener.PauseListener;
 import com.wasu.dlna.listener.PlayListener;
@@ -25,12 +27,14 @@ import org.fourthline.cling.model.meta.Device;
 import org.fourthline.cling.model.meta.Service;
 import org.fourthline.cling.model.types.UDAServiceId;
 import org.fourthline.cling.support.avtransport.callback.GetPositionInfo;
+import org.fourthline.cling.support.avtransport.callback.GetTransportInfo;
 import org.fourthline.cling.support.avtransport.callback.Pause;
 import org.fourthline.cling.support.avtransport.callback.Play;
 import org.fourthline.cling.support.avtransport.callback.Seek;
 import org.fourthline.cling.support.avtransport.callback.SetAVTransportURI;
 import org.fourthline.cling.support.avtransport.callback.Stop;
 import org.fourthline.cling.support.model.PositionInfo;
+import org.fourthline.cling.support.model.TransportInfo;
 import org.fourthline.cling.support.renderingcontrol.callback.GetVolume;
 import org.fourthline.cling.support.renderingcontrol.callback.SetMute;
 import org.fourthline.cling.support.renderingcontrol.callback.SetVolume;
@@ -408,6 +412,49 @@ public class WasuDlnaController implements IWasuDlnaController {
                 if (Utils.isNotNull(listener)) {
                     listener.onSetMuteFailed(new DlnaResponse(invocation, operation, defaultMsg));
                 }
+            }
+        });
+    }
+
+    @Override
+    public void getTransportInfo(GetTransportInfoListener listener) {
+        if (Utils.isNull(avTransportService)) {
+            Log.d(Constant.TAG, "getTransportInfo: service == null");
+            return;
+        }
+
+        if (Utils.isNull(controlPoint)) {
+            Log.d(Constant.TAG, "setMute: controlPoint == null");
+            return;
+        }
+
+        if (!DlnaUtil.isSupportAction(avTransportService, Constant.ACTION_GET_TRANSPORT_INFO)) {
+            return;
+        }
+
+        controlPoint.execute(new GetTransportInfo(avTransportService) {
+
+            @Override
+            public void success(ActionInvocation invocation) {
+                super.success(invocation);
+                if (Utils.isNotNull(listener)) {
+                    listener.onGetTransportInfoSuccess(new TransportInfoResponse(invocation));
+                }
+            }
+
+            @Override
+            public void received(ActionInvocation invocation, TransportInfo transportInfo) {
+                if (Utils.isNotNull(listener)) {
+                    listener.onReceivedTransportInfo(new TransportInfoResponse(invocation, transportInfo));
+                }
+            }
+
+            @Override
+            public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMsg) {
+                if (Utils.isNotNull(listener)) {
+                    listener.onGetTransportInfoFailed(new TransportInfoResponse(invocation, operation, defaultMsg));
+                }
+
             }
         });
     }
