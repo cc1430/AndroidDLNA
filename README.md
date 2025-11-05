@@ -104,11 +104,3 @@ WasuDlnaManager.getInstance().getWasuDlnaController().pause(pauseListener);
 ```
 WasuDlnaManager.getInstance().unInit();
 ```
-
-
-3.6播放
-WasuDlnaManager.getInstance().getWasuDlnaController().play(playListener);
-3.7暂停
-WasuDlnaManager.getInstance().getWasuDlnaController().pause(pauseListener);
-3.8反初始化
-WasuDlnaManager.getInstance().unInit();
